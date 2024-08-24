@@ -14,7 +14,7 @@ export type Column<T> = {
   key: keyof T;
   getOptionsFn?: (itemId: string, key: keyof T) => Promise<Option[]>;
   onChange?: (itemId: string, key: keyof T, value: T[keyof T]) => Promise<void>;
-  sortable?: boolean; // Nowy atrybut do określenia, czy kolumna jest sortowalna
+  sortable?: boolean;
 };
 
 export type GridProps<T> = {
@@ -84,6 +84,11 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
     setSortConfig({ key, direction: 'desc' });
   };
 
+  const handleResetSort = () => {
+    setSortedItems(items);
+    setSortConfig({ key: null, direction: 'asc' });
+  };
+
   return (
     <div className="flex flex-col">
       <input
@@ -94,13 +99,12 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
         className="border p-2 w-full mb-4"
       />
       <div className="grid grid-cols-1">
-        {/* Render headers */}
         <div className="grid grid-cols-8">
           {columns.map((col) => (
             <div key={col.id} className="font-bold m-2 flex items-center">
               {col.label || ''}
               {col.sortable && (
-                <div className="flex ml-2 cursor-pointer">
+                <div className="flex ml-2 cursor-pointer items-end">
                   <button
                     onClick={() => handleSortAsc(col.key)}
                     className={`p-1 text-2xl`}
@@ -115,13 +119,19 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
                   >
                     ↓
                   </button>
+
+                  <button
+                    className={`p-1 text-xl`}
+                    onClick={() => handleResetSort()}
+                  >
+                    ⟲
+                  </button>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        {/* Render items */}
         {filteredItems.map((item) => (
           <div key={item.id} className="grid grid-cols-8 items-center">
             {columns.map((col) => (
