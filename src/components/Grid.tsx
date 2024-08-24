@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 export type Option = {
   id: string;
@@ -14,41 +14,65 @@ export type Column<T> = {
   onChange?: (itemId: string, key: keyof T, value: T[keyof T]) => Promise<void>;
 };
 
-export type Item<T> = {
-  id: string;
-  value: T;
-};
-
 export type GridProps<T> = {
   columns: Column<T>[];
   items: Item<T>[];
 };
 
-export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
-  return (
-    <div className="grid grid-cols-1">
-      {/* Render headers */}
-      <div className="grid grid-cols-8">
-        {columns.map((col, index) => (
-          <div key={col.id} className={`font-bold m-2 self-end`}>
-            {col.label || ''}
-          </div>
-        ))}
-      </div>
+type ItemValue = string | number | boolean | Option;
 
-      {/* Render items */}
-      {items.map((item) => (
-        <div key={item.id} className="grid grid-cols-8 items-center">
-          {columns.map((col) => (
-            <div
-              key={col.id}
-              className={`p-2 border border-x-0 border-gray-200 bg-white`}
-            >
-              <FieldRenderer col={col} item={item} />
+export type Item<T = Record<string, ItemValue>> = {
+  id: string;
+  value: T;
+};
+
+export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  const filteredItems = items.filter((item: Item) =>
+    Object.values(item.value).some((value: ItemValue) => {
+      const valueAsString = String(value);
+      return valueAsString.toLowerCase().includes(searchTerm.toLowerCase());
+    }),
+  );
+
+  return (
+    <div className="flex flex-col">
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="border p-2 w-full"
+      />
+      <div className="grid grid-cols-1">
+        {/* Render headers */}
+        <div className="grid grid-cols-8">
+          {columns.map((col, index) => (
+            <div key={col.id} className={`font-bold m-2 self-end`}>
+              {col.label || ''}
             </div>
           ))}
         </div>
-      ))}
+
+        {/* Render items */}
+        {filteredItems.map((item) => (
+          <div key={item.id} className="grid grid-cols-8 items-center">
+            {columns.map((col) => (
+              <div
+                key={col.id}
+                className={`p-2 border border-x-0 border-gray-200 bg-white`}
+              >
+                <FieldRenderer col={col} item={item} />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
