@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export type Option = {
   id: string;
   label: string;
 };
+
+export type SortOrder = 'asc' | 'desc';
 
 export type Column<T> = {
   id: string;
@@ -12,6 +14,7 @@ export type Column<T> = {
   key: keyof T;
   getOptionsFn?: (itemId: string, key: keyof T) => Promise<Option[]>;
   onChange?: (itemId: string, key: keyof T, value: T[keyof T]) => Promise<void>;
+  sortable?: boolean; // Nowy atrybut do określenia, czy kolumna jest sortowalna
 };
 
 export type GridProps<T> = {
@@ -19,26 +22,67 @@ export type GridProps<T> = {
   items: Item<T>[];
 };
 
-type ItemValue = string | number | boolean | Option;
+export type ItemValue = Record<string, string | number | boolean | Option>;
 
-export type Item<T = Record<string, ItemValue>> = {
+export type Item<T = ItemValue> = {
   id: string;
   value: T;
 };
 
 export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [sortedItems, setSortedItems] = useState<Item<T>[]>(items);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof T | null;
+    direction: SortOrder;
+  }>({ key: null, direction: 'asc' });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const filteredItems = items.filter((item: Item) =>
-    Object.values(item.value).some((value: ItemValue) => {
+  const filteredItems = sortedItems.filter((item) =>
+    Object.values(item.value).some((value) => {
       const valueAsString = String(value);
       return valueAsString.toLowerCase().includes(searchTerm.toLowerCase());
     }),
   );
+
+  const handleSortAsc = (key: keyof T) => {
+    const sorted = [...items].sort((a, b) => {
+      const aValue = a.value[key];
+      const bValue = b.value[key];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return aValue.localeCompare(bValue);
+      }
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return aValue - bValue;
+      }
+      return 0;
+    });
+
+    setSortedItems(sorted);
+    setSortConfig({ key, direction: 'asc' });
+  };
+
+  const handleSortDesc = (key: keyof T) => {
+    const sorted = [...items].sort((a, b) => {
+      const aValue = a.value[key];
+      const bValue = b.value[key];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return bValue.localeCompare(aValue);
+      }
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return bValue - aValue;
+      }
+      return 0;
+    });
+
+    setSortedItems(sorted);
+    setSortConfig({ key, direction: 'desc' });
+  };
 
   return (
     <div className="flex flex-col">
@@ -47,14 +91,32 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
         placeholder="Search..."
         value={searchTerm}
         onChange={handleSearchChange}
-        className="border p-2 w-full"
+        className="border p-2 w-full mb-4"
       />
       <div className="grid grid-cols-1">
         {/* Render headers */}
         <div className="grid grid-cols-8">
-          {columns.map((col, index) => (
-            <div key={col.id} className={`font-bold m-2 self-end`}>
+          {columns.map((col) => (
+            <div key={col.id} className="font-bold m-2 flex items-center">
               {col.label || ''}
+              {col.sortable && (
+                <div className="flex ml-2 cursor-pointer">
+                  <button
+                    onClick={() => handleSortAsc(col.key)}
+                    className={`p-1 text-2xl`}
+                    title="Sort Ascending"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    onClick={() => handleSortDesc(col.key)}
+                    className={`p-1 text-2xl`}
+                    title="Sort Descending"
+                  >
+                    ↓
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

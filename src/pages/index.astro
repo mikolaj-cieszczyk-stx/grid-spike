@@ -1,6 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Grid, type Column, type Item, type Option } from '../components/Grid';
+import {
+  Grid,
+  type Column,
+  type Item,
+  type ItemValue,
+  type Option,
+} from '../components/Grid';
 
 const columns: Column<{
   id: string;
@@ -9,61 +15,69 @@ const columns: Column<{
   defaultWeight: number;
   count: number;
   dictionaryNecessity: string;
-  category?: Option;
-  active?: boolean;
+  category?: Option; // Select column
+  active?: boolean; // Checkbox column
 }>[] = [
   {
     id: 'id',
-    label: 'Id',
+    label: 'ID',
     type: 'text',
     key: 'id',
+    sortable: true,
   },
   {
     id: 'label',
     label: 'Label',
     type: 'text',
     key: 'label',
+    sortable: true,
   },
   {
     id: 'type',
     label: 'Type',
     type: 'text',
     key: 'type',
+    sortable: true,
   },
   {
     id: 'defaultWeight',
     label: 'Default Weight',
     type: 'number',
     key: 'defaultWeight',
+    sortable: true,
   },
   {
     id: 'count',
     label: 'Count',
     type: 'number',
     key: 'count',
+    sortable: true,
   },
   {
     id: 'dictionaryNecessity',
     label: 'Dictionary Necessity',
     type: 'text',
     key: 'dictionaryNecessity',
+    sortable: true,
   },
   {
     id: 'category',
     label: 'Category',
     type: 'select',
     key: 'category',
-    getOptionsFn: async (itemId, key) => [
+    getOptionsFn: async () => [
       { id: 'cat1', label: 'Category 1' },
       { id: 'cat2', label: 'Category 2' },
       { id: 'cat3', label: 'Category 3' },
     ],
+    sortable: false,
   },
   {
     id: 'active',
     label: 'Active',
     type: 'checkbox',
     key: 'active',
+    sortable: false,
   },
 ];
 
@@ -74,8 +88,8 @@ const items: Item<{
   defaultWeight: number;
   count: number;
   dictionaryNecessity: string;
-  category?: Option;
-  active?: boolean;
+  category?: Option; // Select column
+  active?: boolean; // Checkbox column
 }>[] = [
   {
     id: '1',
@@ -113,6 +127,32 @@ const items: Item<{
       count: 300,
       dictionaryNecessity: 'Low',
       category: { id: 'cat3', label: 'Category 3' },
+      active: true,
+    },
+  },
+  {
+    id: '4',
+    value: {
+      id: '4',
+      label: 'Item 4',
+      type: 'Type A',
+      defaultWeight: 40,
+      count: 400,
+      dictionaryNecessity: 'Medium',
+      category: { id: 'cat1', label: 'Category 1' },
+      active: false,
+    },
+  },
+  {
+    id: '5',
+    value: {
+      id: '5',
+      label: 'Item 5',
+      type: 'Type B',
+      defaultWeight: 50,
+      count: 500,
+      dictionaryNecessity: 'High',
+      category: { id: 'cat2', label: 'Category 2' },
       active: true,
     },
   },
