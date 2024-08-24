@@ -1,7 +1,126 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Grid, type Column, type Item, type Option } from '../components/Grid';
+
+const columns: Column<{
+  id: string;
+  label: string;
+  type: string;
+  defaultWeight: number;
+  count: number;
+  dictionaryNecessity: string;
+  category?: Option;
+  active?: boolean;
+}>[] = [
+  {
+    id: 'id',
+    label: 'Id',
+    type: 'text',
+    key: 'id',
+  },
+  {
+    id: 'label',
+    label: 'Label',
+    type: 'text',
+    key: 'label',
+  },
+  {
+    id: 'type',
+    label: 'Type',
+    type: 'text',
+    key: 'type',
+  },
+  {
+    id: 'defaultWeight',
+    label: 'Default Weight',
+    type: 'number',
+    key: 'defaultWeight',
+  },
+  {
+    id: 'count',
+    label: 'Count',
+    type: 'number',
+    key: 'count',
+  },
+  {
+    id: 'dictionaryNecessity',
+    label: 'Dictionary Necessity',
+    type: 'text',
+    key: 'dictionaryNecessity',
+  },
+  {
+    id: 'category',
+    label: 'Category',
+    type: 'select',
+    key: 'category',
+    getOptionsFn: async (itemId, key) => [
+      { id: 'cat1', label: 'Category 1' },
+      { id: 'cat2', label: 'Category 2' },
+      { id: 'cat3', label: 'Category 3' },
+    ],
+  },
+  {
+    id: 'active',
+    label: 'Active',
+    type: 'checkbox',
+    key: 'active',
+  },
+];
+
+const items: Item<{
+  id: string;
+  label: string;
+  type: string;
+  defaultWeight: number;
+  count: number;
+  dictionaryNecessity: string;
+  category?: Option;
+  active?: boolean;
+}>[] = [
+  {
+    id: '1',
+    value: {
+      id: '1',
+      label: 'Item 1',
+      type: 'Type A',
+      defaultWeight: 10,
+      count: 100,
+      dictionaryNecessity: 'High',
+      category: { id: 'cat1', label: 'Category 1' },
+      active: true,
+    },
+  },
+  {
+    id: '2',
+    value: {
+      id: '2',
+      label: 'Item 2',
+      type: 'Type B',
+      defaultWeight: 20,
+      count: 200,
+      dictionaryNecessity: 'Medium',
+      category: { id: 'cat2', label: 'Category 2' },
+      active: false,
+    },
+  },
+  {
+    id: '3',
+    value: {
+      id: '3',
+      label: 'Item 3',
+      type: 'Type C',
+      defaultWeight: 30,
+      count: 300,
+      dictionaryNecessity: 'Low',
+      category: { id: 'cat3', label: 'Category 3' },
+      active: true,
+    },
+  },
+];
 ---
 
 <Layout title="Welcome to Astro.">
-  <main></main>
+  <main class="p-8">
+    <Grid columns={columns} items={items} />
+  </main>
 </Layout>
