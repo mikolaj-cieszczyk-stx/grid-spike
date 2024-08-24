@@ -8,158 +8,67 @@ import {
   type Option,
 } from '../components/Grid';
 
-const columns: Column<{
-  id: string;
-  label: string;
-  type: string;
-  defaultWeight: number;
-  count: number;
-  dictionaryNecessity: string;
-  category?: Option; // Select column
-  active?: boolean; // Checkbox column
-}>[] = [
-  {
-    id: 'id',
-    label: 'ID',
-    type: 'text',
-    key: 'id',
-    sortable: true,
-  },
-  {
-    id: 'label',
-    label: 'Label',
-    type: 'text',
-    key: 'label',
-    sortable: true,
-  },
-  {
-    id: 'type',
-    label: 'Type',
-    type: 'text',
-    key: 'type',
-    sortable: true,
-  },
+const options: Option[] = [
+  { id: 'cat1', label: 'Category 1' },
+  { id: 'cat2', label: 'Category 2' },
+  { id: 'cat3', label: 'Category 3' },
+];
+
+const columns: Column<ItemValue>[] = [
+  { id: 'id', label: 'Id', key: 'id', type: 'text', sortable: true },
+  { id: 'label', label: 'Label', key: 'label', type: 'text', sortable: true },
+  { id: 'type', label: 'Type', key: 'type', type: 'text', sortable: true },
   {
     id: 'defaultWeight',
     label: 'Default Weight',
-    type: 'number',
     key: 'defaultWeight',
-    sortable: true,
-  },
-  {
-    id: 'count',
-    label: 'Count',
     type: 'number',
-    key: 'count',
     sortable: true,
   },
+  { id: 'count', label: 'Count', key: 'count', type: 'number', sortable: true },
   {
     id: 'dictionaryNecessity',
     label: 'Dictionary Necessity',
-    type: 'text',
     key: 'dictionaryNecessity',
+    type: 'text',
     sortable: true,
   },
   {
     id: 'category',
     label: 'Category',
-    type: 'select',
     key: 'category',
-    getOptionsFn: async () => [
-      { id: 'cat1', label: 'Category 1' },
-      { id: 'cat2', label: 'Category 2' },
-      { id: 'cat3', label: 'Category 3' },
-    ],
+    type: 'select',
     sortable: false,
   },
   {
     id: 'active',
     label: 'Active',
-    type: 'checkbox',
     key: 'active',
+    type: 'checkbox',
     sortable: false,
   },
 ];
 
-const items: Item<{
-  id: string;
-  label: string;
-  type: string;
-  defaultWeight: number;
-  count: number;
-  dictionaryNecessity: string;
-  category?: Option; // Select column
-  active?: boolean; // Checkbox column
-}>[] = [
-  {
-    id: '1',
-    value: {
-      id: '1',
-      label: 'Item 1',
-      type: 'Type A',
-      defaultWeight: 10,
-      count: 100,
-      dictionaryNecessity: 'High',
-      category: { id: 'cat1', label: 'Category 1' },
-      active: true,
-    },
+const generateItem = (id: number): Item<ItemValue> => ({
+  id: id.toString(),
+  value: {
+    id: id.toString(),
+    label: `Item ${id}`,
+    type: `Type ${String.fromCharCode(65 + (id % 3))}`,
+    defaultWeight: Math.floor(Math.random() * 100) + 1,
+    count: Math.floor(Math.random() * 1000) + 1,
+    dictionaryNecessity: ['High', 'Medium', 'Low'][id % 3],
+    category: options[id % options.length],
+    active: id % 2 === 0,
   },
-  {
-    id: '2',
-    value: {
-      id: '2',
-      label: 'Item 2',
-      type: 'Type B',
-      defaultWeight: 20,
-      count: 200,
-      dictionaryNecessity: 'Medium',
-      category: { id: 'cat2', label: 'Category 2' },
-      active: false,
-    },
-  },
-  {
-    id: '3',
-    value: {
-      id: '3',
-      label: 'Item 3',
-      type: 'Type C',
-      defaultWeight: 30,
-      count: 300,
-      dictionaryNecessity: 'Low',
-      category: { id: 'cat3', label: 'Category 3' },
-      active: true,
-    },
-  },
-  {
-    id: '4',
-    value: {
-      id: '4',
-      label: 'Item 4',
-      type: 'Type A',
-      defaultWeight: 40,
-      count: 400,
-      dictionaryNecessity: 'Medium',
-      category: { id: 'cat1', label: 'Category 1' },
-      active: false,
-    },
-  },
-  {
-    id: '5',
-    value: {
-      id: '5',
-      label: 'Item 5',
-      type: 'Type B',
-      defaultWeight: 50,
-      count: 500,
-      dictionaryNecessity: 'High',
-      category: { id: 'cat2', label: 'Category 2' },
-      active: true,
-    },
-  },
-];
+});
+
+const items: Item<ItemValue>[] = Array.from({ length: 100 }, (_, index) =>
+  generateItem(index + 1),
+);
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Grid spike">
   <main class="p-8">
     <Grid columns={columns} items={items} client:load />
   </main>

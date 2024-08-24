@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 export type Option = {
   id: string;
@@ -27,6 +29,35 @@ export type ItemValue = Record<string, string | number | boolean | Option>;
 export type Item<T = ItemValue> = {
   id: string;
   value: T;
+};
+
+const Row = <T,>({
+  index,
+  style,
+  items,
+  columns,
+}: {
+  index: number;
+  style: React.CSSProperties;
+  items: Item<T>[];
+  columns: Column<T>[];
+}) => {
+  console.log(`Rendering row ${index}`);
+
+  const item = items[index];
+
+  return (
+    <div style={style} className="grid grid-cols-8 items-center">
+      {columns.map((col) => (
+        <div
+          key={col.id}
+          className="p-2 border border-x-0 border-gray-200 bg-white"
+        >
+          <FieldRenderer col={col} item={item} />
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
@@ -90,7 +121,7 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="grid-container">
       <input
         type="text"
         placeholder="Search..."
@@ -98,7 +129,7 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
         onChange={handleSearchChange}
         className="border p-2 w-full mb-4"
       />
-      <div className="grid grid-cols-1">
+      <div className="grid-header">
         <div className="grid grid-cols-8">
           {columns.map((col) => (
             <div key={col.id} className="font-bold m-2 flex items-center">
@@ -107,21 +138,20 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
                 <div className="flex ml-2 cursor-pointer items-end">
                   <button
                     onClick={() => handleSortAsc(col.key)}
-                    className={`p-1 text-2xl`}
+                    className="p-1 text-2xl"
                     title="Sort Ascending"
                   >
                     ↑
                   </button>
                   <button
                     onClick={() => handleSortDesc(col.key)}
-                    className={`p-1 text-2xl`}
+                    className="p-1 text-2xl"
                     title="Sort Descending"
                   >
                     ↓
                   </button>
-
                   <button
-                    className={`p-1 text-xl`}
+                    className="p-1 text-xl font-thin"
                     onClick={() => handleResetSort()}
                   >
                     ⟲
@@ -131,19 +161,27 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
             </div>
           ))}
         </div>
-
-        {filteredItems.map((item) => (
-          <div key={item.id} className="grid grid-cols-8 items-center">
-            {columns.map((col) => (
-              <div
-                key={col.id}
-                className={`p-2 border border-x-0 border-gray-200 bg-white`}
-              >
-                <FieldRenderer col={col} item={item} />
-              </div>
-            ))}
-          </div>
-        ))}
+      </div>
+      <div className="grid-content">
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              height={height}
+              width={width}
+              itemCount={filteredItems.length}
+              itemSize={40}
+            >
+              {({ index, style }) => (
+                <Row
+                  index={index}
+                  style={style}
+                  items={filteredItems}
+                  columns={columns}
+                />
+              )}
+            </List>
+          )}
+        </AutoSizer>
       </div>
     </div>
   );
