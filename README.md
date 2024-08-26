@@ -30,6 +30,13 @@ export type Column<T> = {
 };
 ```
 
+### `ItemValue`
+Represents the value of an item. It is a record where keys are strings, and values can be strings, numbers, booleans, or Option.
+
+```typescript
+export type ItemValue = Record<string, string | number | boolean | Option>;
+```
+
 ### `Item<T>`
 Represents an item in the grid. Uses generics to handle various item structures.
 
@@ -38,13 +45,6 @@ export type Item<T = ItemValue> = {
   id: string;
   value: T;
 };
-```
-
-### `ItemValue`
-Represents the value of an item. It is a record where keys are strings, and values can be strings, numbers, booleans, or Option.
-
-```typescript
-export type ItemValue = Record<string, string | number | boolean | Option>;
 ```
 
 ### `Option`
