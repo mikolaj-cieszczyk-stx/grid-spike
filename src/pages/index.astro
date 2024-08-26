@@ -1,13 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import {
-  Grid,
-  uuidv4,
-  type Column,
-  type Item,
-  type ItemValue,
-  type Option,
-} from '../components/Grid';
+import { Grid, uuidv4 } from '../components/Grid';
+import type { Column, Item, ItemValue, Option } from '../types/gridTypes';
 
 const options: Option[] = [
   { id: 'cat1', label: 'Category 1' },
