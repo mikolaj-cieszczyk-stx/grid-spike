@@ -10,6 +10,8 @@ export type Option = {
 
 export type SortOrder = 'asc' | 'desc';
 
+export type ItemValue = Record<string, string | number | boolean | Option>;
+
 export type Column<T> = {
   id: string;
   label: string;
@@ -20,16 +22,14 @@ export type Column<T> = {
   sortable?: boolean;
 };
 
-export type GridProps<T> = {
-  columns: Column<T>[];
-  items: Item<T>[];
-};
-
-export type ItemValue = Record<string, string | number | boolean | Option>;
-
 export type Item<T = ItemValue> = {
   id: string;
   value: T;
+};
+
+export type GridProps<T> = {
+  columns: Column<T>[];
+  items: Item<T>[];
 };
 
 const Row = <T,>({

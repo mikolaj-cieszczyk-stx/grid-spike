@@ -20,7 +20,7 @@ const columns: Column<ItemValue>[] = [
   { id: 'label', label: 'Label', key: 'label', type: 'text', sortable: true },
   { id: 'type', label: 'Type', key: 'type', type: 'text', sortable: true },
   {
-    id: uuidv4(),
+    id: 'defaultWeight',
     label: 'Default Weight',
     key: 'defaultWeight',
     type: 'number',
@@ -51,16 +51,26 @@ const columns: Column<ItemValue>[] = [
 ];
 
 const words = [
-  'Alpha',
-  'Bravo',
-  'Charlie',
-  'Delta',
-  'Echo',
-  'Foxtrot',
-  'Golf',
-  'Hotel',
-  'India',
-  'Juliet',
+  'Lionel Messi',
+  'Cristiano Ronaldo',
+  'Michael Jordan',
+  'Michael Phelps',
+  'Roger Federer',
+  'Serena Williams',
+  'Usain Bolt',
+  'Rafael Nadal',
+  'LeBron James',
+  'Muhammad Ali',
+  'Tiger Woods',
+  'Diego Maradona',
+  'Kobe Bryant',
+  'Lewis Hamilton',
+  'Wayne Gretzky',
+  'Alexander Ovechkin',
+  'Novak Djokovic',
+  'Ben Hogan',
+  'Andre Agassi',
+  "Shaquille O'Neal",
 ];
 
 const generateItem = (id: string): Item<ItemValue> => ({
