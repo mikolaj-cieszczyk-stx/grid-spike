@@ -164,6 +164,5 @@ const columns: Column<Order>[] = [
   { id: 'customerName', label: 'Customer Name', type: 'text', key: 'customerName', sortable: true },
   { id: 'totalAmount', label: 'Total Amount', type: 'number', key: 'totalAmount', sortable: true },
   { id: 'status', label: 'Status', type: 'select', key: 'status', sortable: true },
-  // Można dodać bardziej zaawansowane renderowanie dla kolumny "details"
 ];
 ```
