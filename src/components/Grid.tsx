@@ -51,7 +51,7 @@ const Row = <T,>({
       {columns.map((col) => (
         <div
           key={col.id}
-          className="p-2 border border-x-0 border-gray-200 bg-white"
+          className="p-2 border border-x-0 border-gray-200 bg-white overflow-hidden truncate"
         >
           <FieldRenderer col={col} item={item} />
         </div>
@@ -63,10 +63,6 @@ const Row = <T,>({
 export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortedItems, setSortedItems] = useState<Item<T>[]>(items);
-  const [sortConfig, setSortConfig] = useState<{
-    key: keyof T | null;
-    direction: SortOrder;
-  }>({ key: null, direction: 'asc' });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -94,7 +90,6 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
     });
 
     setSortedItems(sorted);
-    setSortConfig({ key, direction: 'asc' });
   };
 
   const handleSortDesc = (key: keyof T) => {
@@ -112,12 +107,10 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
     });
 
     setSortedItems(sorted);
-    setSortConfig({ key, direction: 'desc' });
   };
 
   const handleResetSort = () => {
     setSortedItems(items);
-    setSortConfig({ key: null, direction: 'asc' });
   };
 
   return (

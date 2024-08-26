@@ -7,6 +7,7 @@ import {
   type ItemValue,
   type Option,
 } from '../components/Grid';
+import { v4 as uuidv4 } from 'uuid';
 
 const options: Option[] = [
   { id: 'cat1', label: 'Category 1' },
@@ -19,7 +20,7 @@ const columns: Column<ItemValue>[] = [
   { id: 'label', label: 'Label', key: 'label', type: 'text', sortable: true },
   { id: 'type', label: 'Type', key: 'type', type: 'text', sortable: true },
   {
-    id: 'defaultWeight',
+    id: uuidv4(),
     label: 'Default Weight',
     key: 'defaultWeight',
     type: 'number',
@@ -49,22 +50,37 @@ const columns: Column<ItemValue>[] = [
   },
 ];
 
-const generateItem = (id: number): Item<ItemValue> => ({
-  id: id.toString(),
+const words = [
+  'Alpha',
+  'Bravo',
+  'Charlie',
+  'Delta',
+  'Echo',
+  'Foxtrot',
+  'Golf',
+  'Hotel',
+  'India',
+  'Juliet',
+];
+
+const generateItem = (id: string): Item<ItemValue> => ({
+  id,
   value: {
-    id: id.toString(),
-    label: `Item ${id}`,
-    type: `Type ${String.fromCharCode(65 + (id % 3))}`,
+    id,
+    label: words[Math.floor(Math.random() * words.length)],
+    type: `Type ${String.fromCharCode(65 + Math.floor(Math.random() * 3))}`,
     defaultWeight: Math.floor(Math.random() * 100) + 1,
     count: Math.floor(Math.random() * 1000) + 1,
-    dictionaryNecessity: ['High', 'Medium', 'Low'][id % 3],
-    category: options[id % options.length],
-    active: id % 2 === 0,
+    dictionaryNecessity: ['High', 'Medium', 'Low'][
+      Math.floor(Math.random() * 3)
+    ],
+    category: options[Math.floor(Math.random() * options.length)],
+    active: Math.random() > 0.5,
   },
 });
 
 const items: Item<ItemValue>[] = Array.from({ length: 100 }, (_, index) =>
-  generateItem(index + 1),
+  generateItem(uuidv4()),
 );
 ---
 
