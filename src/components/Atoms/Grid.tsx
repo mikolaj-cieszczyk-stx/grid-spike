@@ -82,7 +82,9 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
               key={col.id}
               className="font-bold m-2 flex flex-col items-center"
             >
-              <span>{col.label || ''}</span>
+              <span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+                {col.label || ''}
+              </span>
               <input
                 type="text"
                 placeholder={`Search ${col.label}`}
