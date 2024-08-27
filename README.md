@@ -4,14 +4,17 @@
 
 The `DataGrid` component is a versatile React grid component designed for displaying and managing tabular data. It incorporates TypeScript for type safety and supports generics to handle various data structures flexibly. This component is optimized for performance with virtualized rendering and includes features like searching, sorting, and support for multiple field types.
 
+![image](https://github.com/user-attachments/assets/3d3ac04e-e2c6-4088-bd53-1682f9d93ffa)
+
 ## Features
 
-- **Generics and Type Safety**: Leverage TypeScript's generics to define and use flexible data structures.
-- **Virtualized Rendering**: Efficiently handle large datasets with `react-window` and `react-virtualized-auto-sizer`.
-- **Search**: Filter rows based on user input.
-- **Sorting**: Sort columns in ascending or descending order.
-- **Field Types**: Render different field types, including text, number, checkbox, and select.
-- **Customizable Columns**: Define columns with custom settings and behaviors.
+- **Generics and Type Safety**: Utilize TypeScript's generics to create and manage flexible and type-safe data structures, ensuring compile-time type safety across the application.
+- **Virtualized Rendering**: Optimize performance for large datasets using `react-window` and `react-virtualized-auto-sizer`, allowing smooth scrolling and rendering only the visible rows.
+- **Search**: Implement dynamic filtering of rows based on user input across multiple columns, supporting precise data exploration.
+- **Sorting**: Enable column sorting with ascending, descending, and default order options, with support for initial sorting configurations from API or external sources.
+- **Initial Search and Sort Configuration**: Integrate initial search and sort configurations directly from API responses, providing a more dynamic and personalized user experience.
+- **Field Types**: Support a variety of field types, including text, number, checkbox, select, and custom text input, enhancing data interaction and visualization.
+- **Customizable Columns**: Define columns with customizable settings, such as sortable, searchable, and dynamic `onChange` handlers for specific field types.
 
 ## Types and Generics
 
@@ -23,11 +26,12 @@ Defines the configuration for a column. This type uses generics to adapt to diff
 export type Column<T> = {
   id: string;
   label: string;
-  type: 'text' | 'number' | 'checkbox' | 'select';
+  type: 'text' | 'text-input' | 'number' | 'checkbox' | 'select';
   key: keyof T;
   getOptionsFn?: (itemId: string, key: keyof T) => Promise<Option[]>;
   onChange?: (itemId: string, key: keyof T, value: T[keyof T]) => Promise<void>;
   sortable?: boolean;
+  searchable?: boolean;
 };
 ```
 
@@ -66,186 +70,61 @@ Defines the sorting order.
 export type SortOrder = 'asc' | 'desc';
 ```
 
+### `InitialSort`
+
+Defines the initial sorting order.
+
+```typescript
+export type InitialSort = {
+  key: keyof ItemValue;
+  order: 'asc' | 'desc';
+};
+```
+
+### `InitialSearch<T>`
+
+Defines the initial search phrase.
+
+```typescript
+export type InitialSearch<T> = {
+  [key in keyof T]?: string;
+};
+```
+
 ### `GridProps<T>`
 
 - columns: An array of column definitions, where each column uses Column<T>.
 - items: An array of items to display in the grid, using Item<T>.
 
-## Example datasets accepted by the component
+## Usage
 
-### 1. Simple text data:
+To use the `Grid` component in your application, you need to provide it with the necessary props, such as `columns`, `items`, and optionally `initialSort` and `initialSearch` for initial sorting and filtering functionality.
 
-```typescript
-type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  isActive: boolean;
-};
+Here's a basic example of how to set up and use the `Grid` component:
 
-const people: Item<Person>[] = [
-  {
-    id: '1',
-    value: { firstName: 'John', lastName: 'Doe', age: 30, isActive: true },
-  },
-  {
-    id: '2',
-    value: { firstName: 'Jane', lastName: 'Smith', age: 25, isActive: false },
-  },
-  {
-    id: '3',
-    value: { firstName: 'Alice', lastName: 'Johnson', age: 40, isActive: true },
-  },
-];
+```jsx
+import { Grid } from './Atoms/Grid'; // Adjust the import path as needed
+import { columns, items } from './yourDataFile'; // Import your columns and items definitions
 
-const columns: Column<Person>[] = [
-  {
-    id: 'firstName',
-    label: 'First Name',
-    type: 'text',
-    key: 'firstName',
-    sortable: true,
-  },
-  {
-    id: 'lastName',
-    label: 'Last Name',
-    type: 'text',
-    key: 'lastName',
-    sortable: true,
-  },
-  { id: 'age', label: 'Age', type: 'number', key: 'age', sortable: true },
-  { id: 'isActive', label: 'Active', type: 'checkbox', key: 'isActive' },
-];
+function App() {
+  return (
+    <div>
+      <Grid
+        columns={columns}
+        items={items}
+        initialSort={{
+          key: 'label',  // Specify the column key to sort by
+          order: 'asc',  // Specify the sorting order ('asc' or 'desc')
+        }}
+        initialSearch={{
+          label: 'Michael',  // Pre-filter items where the 'label' includes 'Michael'
+          count: '5'         // Pre-filter items where the 'count' includes '5'
+        }}
+      />
+    </div>
+  );
+}
+
+export default App;
 ```
 
-### 2. Data containing Select options:
-
-```typescript
-type Product = {
-  name: string;
-  price: number;
-  category: Option;
-  inStock: boolean;
-};
-
-const products: Item<Product>[] = [
-  {
-    id: '1',
-    value: {
-      name: 'Laptop',
-      price: 999.99,
-      category: { id: 'electronics', label: 'Electronics' },
-      inStock: true,
-    },
-  },
-  {
-    id: '2',
-    value: {
-      name: 'Chair',
-      price: 49.99,
-      category: { id: 'furniture', label: 'Furniture' },
-      inStock: false,
-    },
-  },
-  {
-    id: '3',
-    value: {
-      name: 'Pen',
-      price: 1.99,
-      category: { id: 'stationery', label: 'Stationery' },
-      inStock: true,
-    },
-  },
-];
-
-const columns: Column<Product>[] = [
-  {
-    id: 'name',
-    label: 'Product Name',
-    type: 'text',
-    key: 'name',
-    sortable: true,
-  },
-  { id: 'price', label: 'Price', type: 'number', key: 'price', sortable: true },
-  {
-    id: 'category',
-    label: 'Category',
-    type: 'select',
-    key: 'category',
-    sortable: true,
-  },
-  { id: 'inStock', label: 'In Stock', type: 'checkbox', key: 'inStock' },
-];
-```
-
-### 3. More complex data (multi-level structures):
-
-```typescript
-type Order = {
-  orderId: string;
-  customerName: string;
-  totalAmount: number;
-  status: Option;
-  details: {
-    productId: string;
-    quantity: number;
-  }[];
-};
-
-const orders: Item<Order>[] = [
-  {
-    id: '1',
-    value: {
-      orderId: 'ORD001',
-      customerName: 'John Doe',
-      totalAmount: 150.0,
-      status: { id: 'shipped', label: 'Shipped' },
-      details: [
-        { productId: 'P001', quantity: 2 },
-        { productId: 'P002', quantity: 1 },
-      ],
-    },
-  },
-  {
-    id: '2',
-    value: {
-      orderId: 'ORD002',
-      customerName: 'Jane Smith',
-      totalAmount: 200.5,
-      status: { id: 'pending', label: 'Pending' },
-      details: [{ productId: 'P003', quantity: 3 }],
-    },
-  },
-];
-
-const columns: Column<Order>[] = [
-  {
-    id: 'orderId',
-    label: 'Order ID',
-    type: 'text',
-    key: 'orderId',
-    sortable: true,
-  },
-  {
-    id: 'customerName',
-    label: 'Customer Name',
-    type: 'text',
-    key: 'customerName',
-    sortable: true,
-  },
-  {
-    id: 'totalAmount',
-    label: 'Total Amount',
-    type: 'number',
-    key: 'totalAmount',
-    sortable: true,
-  },
-  {
-    id: 'status',
-    label: 'Status',
-    type: 'select',
-    key: 'status',
-    sortable: true,
-  },
-];
-```
