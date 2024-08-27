@@ -1,4 +1,5 @@
-import type { Column, Item } from '../../types/gridTypes';
+import { availableOptions } from '../../pages/index.astro';
+import type { Column, Item, Option } from '../../types/gridTypes';
 import { SelectField } from '../Atoms/SelectField';
 
 export const FieldRenderer = <T,>({
@@ -41,7 +42,14 @@ export const FieldRenderer = <T,>({
       );
 
     case 'select':
-      return <SelectField col={col} item={item} onChange={col.onChange} />;
+      return (
+        <SelectField
+          col={col}
+          item={item}
+          options={availableOptions}
+          onChange={col.onChange}
+        />
+      );
 
     default:
       return null;

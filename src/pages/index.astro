@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { Grid, uuidv4 } from '../components/Atoms/Grid';
 import type { Column, Item, ItemValue, Option } from '../types/gridTypes';
 
-const options: Option[] = [
+export const availableOptions: Option[] = [
   { id: 'cat1', label: 'Category 1' },
   { id: 'cat2', label: 'Category 2' },
   { id: 'cat3', label: 'Category 3' },
@@ -74,7 +74,8 @@ const generateItem = (id: string): Item => ({
   defaultWeight: Math.floor(Math.random() * 100) + 1,
   count: Math.floor(Math.random() * 1000) + 1,
   dictionaryNecessity: ['High', 'Medium', 'Low'][Math.floor(Math.random() * 3)],
-  category: options[Math.floor(Math.random() * options.length)],
+  category:
+    availableOptions[Math.floor(Math.random() * availableOptions.length)],
   active: Math.random() > 0.5,
 });
 

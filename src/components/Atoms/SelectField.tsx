@@ -5,19 +5,14 @@ export const SelectField = <T,>({
   col,
   item,
   onChange,
+  options,
 }: {
   col: Column<T>;
   item: Item<T>;
   onChange?: Column<T>['onChange'];
+  options: Option[];
 }) => {
-  const options: Option[] = [
-    { id: 'cat1', label: 'Category 1' },
-    { id: 'cat2', label: 'Category 2' },
-    { id: 'cat3', label: 'Category 3' },
-  ];
-
   const value = item[col.key];
-
   const selectedOption =
     typeof value === 'string'
       ? options.find((opt) => opt.id === value)
@@ -35,7 +30,7 @@ export const SelectField = <T,>({
       }}
       className="border w-full h-full"
     >
-      <option value="">Select...</option>
+      <option value="">Wybierz...</option>
       {options.map((opt) => (
         <option key={opt.id} value={opt.id}>
           {opt.label}
