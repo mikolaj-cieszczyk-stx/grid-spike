@@ -1,6 +1,6 @@
-import { availableOptions } from '../../pages/index.astro';
 import type { Column, Item, Option } from '../../types/gridTypes';
 import { SelectField } from '../Atoms/SelectField';
+import { availableOptions } from '../GridOne';
 
 export const FieldRenderer = <T,>({
   col,
@@ -11,9 +11,24 @@ export const FieldRenderer = <T,>({
 }) => {
   const value = item[col.key];
 
+  console.log(col);
+
   switch (col.type) {
     case 'text':
       return <span>{String(value)}</span>;
+
+    case 'text-input':
+      return (
+        <input
+          type="text"
+          value={typeof value === 'string' ? value : ''}
+          onChange={(e) =>
+            col.onChange &&
+            col.onChange(item.id, col.key, e.target.value as T[keyof T])
+          }
+          className="border w-full h-full"
+        />
+      );
 
     case 'number':
       return (

@@ -10,11 +10,12 @@ export type ItemValue = Record<string, string | number | boolean | Option>;
 export type Column<T> = {
   id: string;
   label: string;
-  type: 'text' | 'number' | 'checkbox' | 'select';
+  type: 'text' | 'text-input' | 'number' | 'checkbox' | 'select';
   key: keyof T;
   getOptionsFn?: (itemId: string, key: keyof T) => Promise<Option[]>;
   onChange?: (itemId: string, key: keyof T, value: T[keyof T]) => Promise<void>;
   sortable?: boolean;
+  searchable?: boolean;
 };
 
 export type Item<T = ItemValue> = T & { id: string };

@@ -17,7 +17,7 @@ export const Row = <T,>({
   const item = items[index];
 
   return (
-    <div style={style} className="grid grid-cols-8 items-center">
+    <div style={style} className="grid grid-cols-9 items-center">
       {columns.map((col) => (
         <div
           key={col.id}

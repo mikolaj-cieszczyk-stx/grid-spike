@@ -76,21 +76,21 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
   return (
     <div className="grid-container">
       <div className="grid-header">
-        <div className="grid grid-cols-8">
+        <div className="grid grid-cols-9">
           {columns.map((col) => (
-            <div
-              key={col.id}
-              className="font-bold m-2 flex flex-col items-center"
-            >
+            <div key={col.id} className="font-bold flex flex-col items-center">
               <span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
                 {col.label || ''}
               </span>
               <input
                 type="text"
-                placeholder={`Search ${col.label}`}
+                placeholder={
+                  !col.searchable ? 'Disabled' : `Search ${col.label}`
+                }
                 value={searchTerms[col.key as string] || ''}
                 onChange={(e) => handleSearchChange(e, col.key as string)}
                 className="border p-1 w-full mb-2"
+                disabled={!col.searchable}
               />
               {col.sortable && (
                 <div className="flex mt-2 cursor-pointer items-end">
