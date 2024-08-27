@@ -58,6 +58,10 @@ export const Grid = <T extends {}>({
     }));
   };
 
+  const handleClearSearch = () => {
+    setSearchTerms({});
+  };
+
   const handleSortAsc = (key: keyof T) => {
     sortItems(key, 'asc');
   };
@@ -90,16 +94,34 @@ export const Grid = <T extends {}>({
               <span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
                 {col.label || ''}
               </span>
-              <input
-                type="text"
-                placeholder={
-                  !col.searchable ? 'Not available' : `Search ${col.label}`
-                }
-                value={searchTerms[col.key as string] || ''}
-                onChange={(e) => handleSearchChange(e, col.key as string)}
-                className="border p-1 w-full mb-2"
-                disabled={!col.searchable}
-              />
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  placeholder={
+                    !col.searchable ? 'Not available' : `Search ${col.label}`
+                  }
+                  value={searchTerms[col.key as string] || ''}
+                  onChange={(e) => handleSearchChange(e, col.key as string)}
+                  className="border p-1 w-full mb-2"
+                  disabled={!col.searchable}
+                />
+                {searchTerms[col.key as string] && (
+                  <button
+                    type="button"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    onClick={() =>
+                      handleSearchChange(
+                        {
+                          target: { value: '' },
+                        } as React.ChangeEvent<HTMLInputElement>,
+                        col.key as string,
+                      )
+                    }
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
               {col.sortable && (
                 <div className="flex mt-2 cursor-pointer items-end">
                   <button
