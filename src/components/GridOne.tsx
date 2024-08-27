@@ -118,6 +118,19 @@ const words = [
   "Shaquille O'Neal",
 ];
 
+function makeWord(wordMax: number) {
+  let text = '';
+  const possible = 'bcdfghjklmnpqrstvwxyz';
+  const possibleVowels = 'aeiou';
+
+  for (let i = 0; i < wordMax; i = i + 3) {
+    text += possible[Math.floor(Math.random() * possible.length)];
+    text += possibleVowels[Math.floor(Math.random() * possibleVowels.length)];
+    text += possible[Math.floor(Math.random() * possible.length)];
+  }
+  return text;
+}
+
 const generateItem = (id: string): Item => ({
   id,
   label: words[Math.floor(Math.random() * words.length)],
@@ -128,7 +141,7 @@ const generateItem = (id: string): Item => ({
   category:
     availableOptions[Math.floor(Math.random() * availableOptions.length)],
   active: Math.random() > 0.5,
-  customTextInput: '',
+  customTextInput: makeWord(8),
 });
 
 const items: Item[] = Array.from({ length: 100 }, (_, index) =>
