@@ -11,15 +11,25 @@ export type GridProps<T> = {
 };
 
 export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>({});
   const [sortedItems, setSortedItems] = useState<Item<T>[]>(items);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value.toLowerCase());
+  const handleSearchChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: string,
+  ) => {
+    setSearchTerms((prev) => ({
+      ...prev,
+      [key]: e.target.value.toLowerCase(),
+    }));
   };
 
   const filteredItems = sortedItems.filter((item) =>
-    Object.values(item).some((value) => {
+    columns.every((col) => {
+      const searchTerm = searchTerms[col.key as string] || '';
+      if (!searchTerm) return true;
+
+      const value = item[col.key];
       const valueAsString = String(value);
       return valueAsString.toLowerCase().includes(searchTerm.toLowerCase());
     }),
@@ -65,20 +75,23 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
 
   return (
     <div className="grid-container">
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className="border p-2 w-full mb-4"
-      />
       <div className="grid-header">
         <div className="grid grid-cols-8">
           {columns.map((col) => (
-            <div key={col.id} className="font-bold m-2 flex items-center">
-              {col.label || ''}
+            <div
+              key={col.id}
+              className="font-bold m-2 flex flex-col items-center"
+            >
+              <span>{col.label || ''}</span>
+              <input
+                type="text"
+                placeholder={`Search ${col.label}`}
+                value={searchTerms[col.key as string] || ''}
+                onChange={(e) => handleSearchChange(e, col.key as string)}
+                className="border p-1 w-full mb-2"
+              />
               {col.sortable && (
-                <div className="flex ml-2 cursor-pointer items-end">
+                <div className="flex mt-2 cursor-pointer items-end">
                   <button
                     onClick={() => handleSortAsc(col.key)}
                     className="p-1 text-2xl"
