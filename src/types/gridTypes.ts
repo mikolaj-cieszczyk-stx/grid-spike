@@ -17,7 +17,4 @@ export type Column<T> = {
   sortable?: boolean;
 };
 
-export type Item<T = ItemValue> = {
-  id: string;
-  value: T;
-};
+export type Item<T = ItemValue> = T & { id: string };

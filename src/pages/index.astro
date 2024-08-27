@@ -67,23 +67,18 @@ const words = [
   "Shaquille O'Neal",
 ];
 
-const generateItem = (id: string): Item<ItemValue> => ({
+const generateItem = (id: string): Item => ({
   id,
-  value: {
-    id,
-    label: words[Math.floor(Math.random() * words.length)],
-    type: `Type ${String.fromCharCode(65 + Math.floor(Math.random() * 3))}`,
-    defaultWeight: Math.floor(Math.random() * 100) + 1,
-    count: Math.floor(Math.random() * 1000) + 1,
-    dictionaryNecessity: ['High', 'Medium', 'Low'][
-      Math.floor(Math.random() * 3)
-    ],
-    category: options[Math.floor(Math.random() * options.length)],
-    active: Math.random() > 0.5,
-  },
+  label: words[Math.floor(Math.random() * words.length)],
+  type: `Type ${String.fromCharCode(65 + Math.floor(Math.random() * 3))}`,
+  defaultWeight: Math.floor(Math.random() * 100) + 1,
+  count: Math.floor(Math.random() * 1000) + 1,
+  dictionaryNecessity: ['High', 'Medium', 'Low'][Math.floor(Math.random() * 3)],
+  category: options[Math.floor(Math.random() * options.length)],
+  active: Math.random() > 0.5,
 });
 
-const items: Item<ItemValue>[] = Array.from({ length: 100 }, (_, index) =>
+const items: Item[] = Array.from({ length: 100 }, (_, index) =>
   generateItem(uuidv4()),
 );
 ---

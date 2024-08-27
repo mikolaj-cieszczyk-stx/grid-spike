@@ -15,15 +15,22 @@ export const SelectField = <T,>({
     { id: 'cat3', label: 'Category 3' },
   ];
 
-  const value = item.value[col.key] as Option | undefined;
+  const value = item[col.key];
+
+  // Znajdź obiekt Option na podstawie id, jeśli value jest id
+  const selectedOption =
+    typeof value === 'string'
+      ? options.find((opt) => opt.id === value)
+      : (value as Option | undefined);
 
   return (
     <select
-      value={value?.id || ''}
+      value={selectedOption?.id || ''}
       onChange={(e) => {
-        const selectedOption = options.find((opt) => opt.id === e.target.value);
-        if (onChange && selectedOption) {
-          onChange(item.id, col.key, selectedOption as T[keyof T]);
+        const newValue = e.target.value;
+        const newOption = options.find((opt) => opt.id === newValue);
+        if (onChange && newOption) {
+          onChange(item.id, col.key, newOption as T[keyof T]);
         }
       }}
       className="border w-full h-full"

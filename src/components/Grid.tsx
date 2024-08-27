@@ -19,7 +19,7 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
   };
 
   const filteredItems = sortedItems.filter((item) =>
-    Object.values(item.value).some((value) => {
+    Object.values(item).some((value) => {
       const valueAsString = String(value);
       return valueAsString.toLowerCase().includes(searchTerm.toLowerCase());
     }),
@@ -27,8 +27,8 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
 
   const handleSortAsc = (key: keyof T) => {
     const sorted = [...items].sort((a, b) => {
-      const aValue = a.value[key];
-      const bValue = b.value[key];
+      const aValue = a[key];
+      const bValue = b[key];
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return aValue.localeCompare(bValue);
@@ -44,8 +44,8 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
 
   const handleSortDesc = (key: keyof T) => {
     const sorted = [...items].sort((a, b) => {
-      const aValue = a.value[key];
-      const bValue = b.value[key];
+      const aValue = a[key];
+      const bValue = b[key];
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return bValue.localeCompare(aValue);

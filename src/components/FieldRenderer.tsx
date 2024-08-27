@@ -8,7 +8,7 @@ export const FieldRenderer = <T,>({
   col: Column<T>;
   item: Item<T>;
 }) => {
-  const value = item.value[col.key];
+  const value = item[col.key];
 
   switch (col.type) {
     case 'text':
