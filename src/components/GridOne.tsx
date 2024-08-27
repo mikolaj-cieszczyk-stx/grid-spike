@@ -62,12 +62,10 @@ const columns: Column<ItemValue>[] = [
       value: ItemValue[keyof ItemValue],
     ) => {
       if (typeof value === 'string') {
-        // Dodajemy walidację, aby upewnić się, że wartość jest typu string
         console.log(
           `Item ID: ${itemId}, Key: ${String(key)}, New Value: ${value}`,
         );
-        // Tutaj możesz dodać logikę asynchroniczną, jeśli jest wymagana
-        await new Promise((resolve) => setTimeout(resolve, 500)); // przykładowa operacja asynchroniczna
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
     },
   },
@@ -130,7 +128,7 @@ const generateItem = (id: string): Item => ({
   category:
     availableOptions[Math.floor(Math.random() * availableOptions.length)],
   active: Math.random() > 0.5,
-  customTextInput: '', // Dodajemy nową właściwość z pustą wartością początkową
+  customTextInput: '',
 });
 
 const items: Item[] = Array.from({ length: 100 }, (_, index) =>
