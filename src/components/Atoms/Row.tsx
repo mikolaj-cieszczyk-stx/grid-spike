@@ -1,4 +1,4 @@
-import type { Item, Column } from '../types/gridTypes';
+import type { Item, Column } from '../../types/gridTypes';
 import { FieldRenderer } from './FieldRenderer';
 
 export const Row = <T,>({
