@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import type { Column, Item } from '../types/gridTypes';
+import type { Column, Item } from '../../types/gridTypes';
 import { Row } from './Row';
 export { v4 as uuidv4 } from 'uuid';
 

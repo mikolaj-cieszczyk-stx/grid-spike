@@ -1,5 +1,5 @@
-import type { Column, Item } from '../types/gridTypes';
-import { SelectField } from './SelectField';
+import type { Column, Item } from '../../types/gridTypes';
+import { SelectField } from '../Atoms/SelectField';
 
 export const FieldRenderer = <T,>({
   col,
