@@ -11,8 +11,6 @@ export const FieldRenderer = <T,>({
 }) => {
   const value = item[col.key];
 
-  console.log(col);
-
   switch (col.type) {
     case 'text':
       return <span>{String(value)}</span>;

@@ -1,14 +1,6 @@
-import { useState } from 'react';
-import type {
-  Column,
-  ItemValue,
-  Item,
-  Option,
-  InitialSort,
-  InitialSearch,
-} from '../types/gridTypes';
-import { Grid } from './Atoms/Grid';
 import { v4 as uuidv4 } from 'uuid';
+import type { Column, Item, ItemValue, Option } from '../types/gridTypes';
+import { Grid } from './Atoms/Grid';
 
 export const availableOptions: Option[] = [
   { id: 'cat1', label: 'Category 1' },
