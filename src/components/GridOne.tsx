@@ -146,8 +146,7 @@ const generateItem = (id: string): Item => ({
   defaultWeight: Math.floor(Math.random() * 100) + 1,
   count: Math.floor(Math.random() * 1000) + 1,
   dictionaryNecessity: ['High', 'Medium', 'Low'][Math.floor(Math.random() * 3)],
-  category:
-    availableOptions[Math.floor(Math.random() * availableOptions.length)],
+  category: 'label',
   active: Math.random() > 0.5,
   customTextInput: makeWord(8),
 });

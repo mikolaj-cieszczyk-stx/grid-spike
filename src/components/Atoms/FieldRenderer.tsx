@@ -1,4 +1,4 @@
-import type { Column, Item, Option } from '../../types/gridTypes';
+import type { Column, Item } from '../../types/gridTypes';
 import { SelectField } from '../Atoms/SelectField';
 import { availableOptions } from '../GridOne';
 

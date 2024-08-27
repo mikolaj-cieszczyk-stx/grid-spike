@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { FixedSizeList as List } from 'react-window';
+import React, { useEffect, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import type { Column, Item, InitialSearch } from '../../types/gridTypes';
+import { FixedSizeList as List } from 'react-window';
+import type { Column, InitialSearch, Item } from '../../types/gridTypes';
 import { Row } from './Row';
 export { v4 as uuidv4 } from 'uuid';
 
@@ -93,7 +93,7 @@ export const Grid = <T extends {}>({
               <input
                 type="text"
                 placeholder={
-                  !col.searchable ? 'Disabled' : `Search ${col.label}`
+                  !col.searchable ? 'Not available' : `Search ${col.label}`
                 }
                 value={searchTerms[col.key as string] || ''}
                 onChange={(e) => handleSearchChange(e, col.key as string)}

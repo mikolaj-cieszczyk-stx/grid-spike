@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Column, Item, Option } from '../../types/gridTypes';
 
 export const SelectField = <T,>({
@@ -30,7 +29,7 @@ export const SelectField = <T,>({
       }}
       className="border w-full h-full"
     >
-      <option value="">Wybierz...</option>
+      <option value="">Select...</option>
       {options.map((opt) => (
         <option key={opt.id} value={opt.id}>
           {opt.label}
