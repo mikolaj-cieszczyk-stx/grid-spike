@@ -157,7 +157,6 @@ const items: Item[] = Array.from({ length: 100 }, (_, index) =>
 );
 
 export function GridOne() {
-  const [simulateInitialSearch, setSimulateInitialSearch] = useState({});
   return (
     <Grid
       columns={columns}
