@@ -1,4 +1,12 @@
-import type { Column, ItemValue, Item, Option } from '../types/gridTypes';
+import { useState } from 'react';
+import type {
+  Column,
+  ItemValue,
+  Item,
+  Option,
+  InitialSort,
+  InitialSearch,
+} from '../types/gridTypes';
 import { Grid } from './Atoms/Grid';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -149,5 +157,16 @@ const items: Item[] = Array.from({ length: 100 }, (_, index) =>
 );
 
 export function GridOne() {
-  return <Grid columns={columns} items={items} />;
+  const [simulateInitialSearch, setSimulateInitialSearch] = useState({});
+  return (
+    <Grid
+      columns={columns}
+      items={items}
+      initialSort={{
+        key: 'label',
+        order: 'asc',
+      }}
+      initialSearch={{ label: 'Michael', count: '5' }}
+    />
+  );
 }

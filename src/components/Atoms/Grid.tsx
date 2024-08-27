@@ -1,18 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import type { Column, Item } from '../../types/gridTypes';
+import type { Column, Item, InitialSearch } from '../../types/gridTypes';
 import { Row } from './Row';
 export { v4 as uuidv4 } from 'uuid';
 
 export type GridProps<T> = {
   columns: Column<T>[];
   items: Item<T>[];
+  initialSort?: { key: keyof T; order: 'asc' | 'desc' };
+  initialSearch?: InitialSearch<T>;
 };
 
-export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
-  const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>({});
+export const Grid = <T extends {}>({
+  columns,
+  items,
+  initialSort,
+  initialSearch = {},
+}: GridProps<T>) => {
+  const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>(
+    initialSearch as { [key: string]: string },
+  );
   const [sortedItems, setSortedItems] = useState<Item<T>[]>(items);
+
+  const sortItems = (key: keyof T, order: 'asc' | 'desc') => {
+    const sorted = [...items].sort((a, b) => {
+      const aValue = a[key];
+      const bValue = b[key];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return order === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return order === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+      return 0;
+    });
+
+    setSortedItems(sorted);
+  };
+
+  useEffect(() => {
+    if (initialSort) {
+      sortItems(initialSort.key, initialSort.order);
+    }
+  }, [initialSort]);
 
   const handleSearchChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -22,6 +56,18 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
       ...prev,
       [key]: e.target.value.toLowerCase(),
     }));
+  };
+
+  const handleSortAsc = (key: keyof T) => {
+    sortItems(key, 'asc');
+  };
+
+  const handleSortDesc = (key: keyof T) => {
+    sortItems(key, 'desc');
+  };
+
+  const handleResetSort = () => {
+    setSortedItems(items);
   };
 
   const filteredItems = sortedItems.filter((item) =>
@@ -34,44 +80,6 @@ export const Grid = <T extends {}>({ columns, items }: GridProps<T>) => {
       return valueAsString.toLowerCase().includes(searchTerm.toLowerCase());
     }),
   );
-
-  const handleSortAsc = (key: keyof T) => {
-    const sorted = [...items].sort((a, b) => {
-      const aValue = a[key];
-      const bValue = b[key];
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return aValue.localeCompare(bValue);
-      }
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return aValue - bValue;
-      }
-      return 0;
-    });
-
-    setSortedItems(sorted);
-  };
-
-  const handleSortDesc = (key: keyof T) => {
-    const sorted = [...items].sort((a, b) => {
-      const aValue = a[key];
-      const bValue = b[key];
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return bValue.localeCompare(aValue);
-      }
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return bValue - aValue;
-      }
-      return 0;
-    });
-
-    setSortedItems(sorted);
-  };
-
-  const handleResetSort = () => {
-    setSortedItems(items);
-  };
 
   return (
     <div className="grid-container">

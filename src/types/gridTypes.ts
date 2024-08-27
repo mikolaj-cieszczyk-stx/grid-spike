@@ -19,3 +19,12 @@ export type Column<T> = {
 };
 
 export type Item<T = ItemValue> = T & { id: string };
+
+export type InitialSort = {
+  key: keyof ItemValue;
+  order: 'asc' | 'desc';
+};
+
+export type InitialSearch<T> = {
+  [key in keyof T]?: string;
+};
